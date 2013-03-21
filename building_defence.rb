@@ -2,6 +2,7 @@ $:.unshift File.expand_path('../', __FILE__)
 require "curses"
 require "pry"
 
+require "game_setting"
 require "word"
 require "dictionary"
 
@@ -15,11 +16,10 @@ module BuildingDefence
 
       @words_on_screen = []
 
-      #game parameters
-      @wave_interval = 20 #the bigger the easier
-      @word_density = 5 #the bigger the easier
-      @battlefield_width = Curses.cols - 20
-      @battlefield_height = Curses.lines
+      #some game setting should be initialized here
+      PARAMS[:battlefield_width] = Curses.cols - 20
+      PARAMS[:battlefield_height] = Curses.lines
+
     end
 
     def start
@@ -27,7 +27,7 @@ module BuildingDefence
       while !game_done?
         prepare_words
         go_words!
-        sleep @wave_interval
+        sleep PARAMS[:wave_interval]
       end
     end
 
@@ -47,10 +47,10 @@ module BuildingDefence
     def prepare_words
       x, y = 0, 0
       @words = []
-      while x + @dictionary.max_len < @battlefield_width
+      while x + @dictionary.max_len < PARAMS[:battlefield_width]
         str = @dictionary.random_word
         @words << Word.new(str, y, x, rand(5) + 1)
-        x += str.length + @word_density
+        x += str.length + PARAMS[:word_density]
       end 
     end
 
