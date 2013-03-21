@@ -59,12 +59,13 @@ module BuildingDefence
     end
 
     def explode
-      draw_word explosion_head, @cur_y - 1, @cur_x - 1
-      draw_word explosion_core, @cur_y, @cur_x
+      draw_word explosion_head, @cur_y - 1, @cur_x
+      draw_word explosion_core, @cur_y, @cur_x if @cur_y < PARAMS[:battlefield_height]
     end
 
     def explosion_head
-      "\\" + ("|" * length) + "/"
+      #"\\" + ("|" * length) + "/"
+      "v" * length
     end
 
     def explosion_core
@@ -72,7 +73,7 @@ module BuildingDefence
     end
 
     def clear_explosion
-      draw_word space(length + 2), @cur_y - 1, @cur_x - 1
+      draw_word space(length), @cur_y - 1, @cur_x
       clear_word
     end
 
