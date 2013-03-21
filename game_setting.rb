@@ -7,4 +7,8 @@ module BuildingDefence
     battlefield_width:  0,
     battlefield_height: 0 
   }
+  COLORS = {
+    letter_typed: 1,
+    message: 2
+  }
 end

@@ -35,9 +35,15 @@ module BuildingDefence
 
     def init_window
       Curses.init_screen
+      Curses.start_color
       Curses.nl
       Curses.noecho
+      Curses.cbreak
       srand
+
+      Curses.use_default_colors
+      Curses.init_pair(COLORS[:letter_typed], Curses::COLOR_BLUE, -1)
+      Curses.init_pair(COLORS[:message], Curses::COLOR_RED, -1)
     end
 
     def init_dictionary
@@ -56,9 +62,17 @@ module BuildingDefence
 
     def handle_input
       Thread.new do
+        @match_words = []
         while !game_done?
           char = Curses.getch
-          #show_message "you just type: #{char}"
+          #find_all_match_words(char)
+          #while !@match_words.empty?
+          #  char = Curses.getch
+          #  @match_words.each do |word|
+          #    @match_words.delete(word) unless word.match_cur_letter?(char)
+          #  end
+          #end
+
           word = find_first_match_in_words_on_screen char
           if word
             #show_message "current typing: #{word.content}"
@@ -78,6 +92,12 @@ module BuildingDefence
         return word if word.match_cur_letter? char
       end
       return nil
+    end
+
+    def find_all_match_words(char)
+      @words_on_screen.each do |word|
+        @match_words << word if word.match_cur_letter?(char)
+      end
     end
 
     def game_done?
@@ -108,7 +128,9 @@ module BuildingDefence
       win = Curses::Window.new 5, width, 0, Curses.cols - width
       win.box(?|, ?-)
       win.setpos(2, 3)
-      win.addstr(msg)
+      win.attron(Curses.color_pair(COLORS[:letter_typed])) do
+        win.addstr(msg)
+      end
       win.refresh
       sleep 0.3
     end
