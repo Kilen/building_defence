@@ -19,7 +19,7 @@ module BuildingDefence
         clear_word
         draw_word_at_next_line
       end
-      clear_word
+      blast_effect
       self
     end
 
@@ -27,8 +27,12 @@ module BuildingDefence
       @content
     end
 
+    def length
+      @content.length
+    end
+
     def match_cur_letter? char
-      if @cur_i < @content.length && char == @content[@cur_i]
+      if @cur_i < length && char == @content[@cur_i]
         if last_letter?
           @done_typing = true
           @cur_i = 0
@@ -48,12 +52,36 @@ module BuildingDefence
 
     private
 
-    def clear_word
-      draw_word word_length_space, @cur_y, @cur_x
+    def blast_effect
+      explode
+      sleep 0.5
+      clear_explosion
     end
 
-    def word_length_space
-      " " * @content.length
+    def explode
+      draw_word explosion_head, @cur_y - 1, @cur_x - 1
+      draw_word explosion_core, @cur_y, @cur_x
+    end
+
+    def explosion_head
+      "\\" + ("|" * length) + "/"
+    end
+
+    def explosion_core
+      "*" * length
+    end
+
+    def clear_explosion
+      draw_word space(length + 2), @cur_y - 1, @cur_x - 1
+      clear_word
+    end
+
+    def clear_word
+      draw_word space(length), @cur_y, @cur_x
+    end
+
+    def space len
+      " " * len 
     end
 
     def draw_word_at_next_line
@@ -85,7 +113,7 @@ module BuildingDefence
     end
 
     def last_letter?
-      @cur_i == @content.length - 1
+      @cur_i == length - 1
     end
 
   end
