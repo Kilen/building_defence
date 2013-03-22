@@ -9,8 +9,9 @@ module BuildingDefence
       @cur_x, @cur_y = beg_x, beg_y
       @next_i = 0 #pointer to next letter to be typed
 
-      @done_typing = false #indicate whether this word was done typing
-      @typing = false #indicate whether this word was being typing
+      @done_typing = false #indicate whether this unit was done typing
+      @typing = false #indicate whether this unit was being typing
+      @kia = false #indicate whether this unit kill in action
     end
 
     def fall
@@ -20,6 +21,7 @@ module BuildingDefence
         clear_word
         draw_word_at_next_line
       end
+      @kia = true
       blast_effect
       self
     end
@@ -55,6 +57,10 @@ module BuildingDefence
 
     def typing?
       @typing
+    end
+
+    def kia?
+      @kia
     end
 
     private
