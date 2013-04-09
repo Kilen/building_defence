@@ -7,7 +7,7 @@ module BuildingDefence
       @speed = speed
       @beg_x, @beg_y = beg_x, beg_y
       @cur_x, @cur_y = beg_x, beg_y
-      @next_i = 0 #pointer to next letter to be typed
+      @cur_i = 0 #pointer to the first letter untyped
 
       @done_typing = false #indicate whether this unit was done typing
       @typing = false #indicate whether this unit was being typing
@@ -35,17 +35,15 @@ module BuildingDefence
     end
 
     def match_cur_letter? char
-      if @next_i < length && char == @content[@next_i]
+
+      if @cur_i < length && char == @content[@cur_i]
         @typing = true
-        if last_letter?
-          @done_typing = true
-          @next_i = 0
-        else
-          @next_i += 1
-        end
+        @done_typing = true if last_letter?
+        @cur_i += 1
+        draw_word_at_cur_line
         return true
       else
-        @next_i = 0
+        @cur_i = 0
         @typing = false
         return false
       end
@@ -103,12 +101,20 @@ module BuildingDefence
       return if collided?
       if typing?
         Curses.attron(Curses.color_pair(COLORS[:letter_typed])) do
-          draw_word @content[0...@next_i], @cur_y, @cur_x
+          draw_word @content[0...@cur_i], @cur_y, @cur_x
         end
-        draw_word @content[@next_i...length], @cur_y, @cur_x + @next_i
+        draw_word @content[@cur_i...length], @cur_y, @cur_x + @cur_i
       else
         draw_word @content, @cur_y, @cur_x
       end
+    end
+
+    def draw_word_at_cur_line
+      return if collided?
+      Curses.attron(Curses.color_pair(COLORS[:letter_typed])) do
+        draw_word @content[0...@cur_i], @cur_y, @cur_x
+      end
+      draw_word @content[@cur_i...length], @cur_y, @cur_x + @cur_i
     end
 
     def draw_word(str, y, x)
@@ -134,7 +140,7 @@ module BuildingDefence
     end
 
     def last_letter?
-      @next_i == length - 1
+      @cur_i == length - 1
     end
 
   end

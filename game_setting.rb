@@ -1,6 +1,6 @@
 module BuildingDefence
   PARAMS = {
-    wave_interval: 20, #the bigger the easier
+    wave_interval: 10, #the bigger the easier
     word_density: 5, #the bigger the easier
 
     #these params should be set in the initialization of the program
@@ -9,6 +9,8 @@ module BuildingDefence
   }
   COLORS = {
     letter_typed: 1,
-    message: 2
+    info: 2,
+    error: 3,
+    success: 4
   }
 end
