@@ -53,7 +53,7 @@ module BuildingDefence
       @words = []
       while x + @dictionary.max_len < PARAMS[:battlefield_width]
         str = @dictionary.random_word
-        @words << Word.new(str, y, x, 1)
+        @words << Word.new(str, y, x, 3)
         x += str.length + PARAMS[:word_density]
       end 
     end
@@ -77,8 +77,7 @@ module BuildingDefence
 
     def those_yet_lived source
       source.delete_if do |word|
-        #FIXME when a word is done typing or cash, it should be kia at once
-        word.done_typing? || word.kia?
+        word.kia?
       end
     end
 

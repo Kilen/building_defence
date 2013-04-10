@@ -132,7 +132,10 @@ module BuildingDefence
     end
 
     def pause
-      sleep pause_duration
+      (pause_duration / 0.1).to_i.times do
+        sleep 0.1
+        break if done_typing?
+      end
     end
 
     def pause_duration
