@@ -64,7 +64,9 @@ module BuildingDefence
         while !game_done?
           char = Curses.getch
           targets = find_all_match source, char
-          targets = those_yet_lived source
+          targets = those_yet_lived targets
+          #show_messages ["targets:"] + targets.map {|w| w.content }, COLORS[:info]
+          #show_messages ["targets num:", targets.length.to_s, "all words num:", source.length.to_s], COLORS[:info]
 
           if targets.empty?
             source = @words_on_screen
@@ -75,15 +77,15 @@ module BuildingDefence
       end
     end
 
-    def those_yet_lived source
-      source.delete_if do |word|
-        word.kia?
-      end
-    end
-
     def find_all_match source, char
       source.select do |word|
         word.match_cur_letter?(char)
+      end
+    end
+
+    def those_yet_lived source
+      source.delete_if do |word|
+        word.kia?
       end
     end
 

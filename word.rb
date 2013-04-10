@@ -9,14 +9,13 @@ module BuildingDefence
       @cur_x, @cur_y = beg_x, beg_y
       @cur_i = 0 #pointer to the first letter untyped
 
-      @done_typing = false #indicate whether this unit was done typing
       @typing = false #indicate whether this unit was being typing
       @kia = false #indicate whether this unit kill in action
     end
 
     def fall
       sleep rand(5)
-      while !(collided? || done_typing?)
+      while !(collided? || kia?)
         pause
         clear_word
         draw_word_at_next_line
@@ -38,7 +37,7 @@ module BuildingDefence
 
       if @cur_i < length && char == @content[@cur_i]
         @typing = true
-        @done_typing = true if last_letter?
+        @kia = true if last_letter?
         @cur_i += 1
         draw_word_at_cur_line
         return true
@@ -47,10 +46,6 @@ module BuildingDefence
         @typing = false
         return false
       end
-    end
-
-    def done_typing?
-      @done_typing
     end
 
     def typing?
@@ -132,10 +127,7 @@ module BuildingDefence
     end
 
     def pause
-      (pause_duration / 0.1).to_i.times do
-        sleep 0.1
-        break if done_typing?
-      end
+      sleep pause_duration
     end
 
     def pause_duration
