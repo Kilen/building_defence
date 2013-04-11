@@ -3,6 +3,7 @@ require "curses"
 module BuildingDefence
   class Building
     def initialize
+      test_loading_game_setting
       @max_height = 3
       @building = generate_building
     end
@@ -28,6 +29,10 @@ module BuildingDefence
       x = 0 if x < 0
       x = PARAMS[:battlefield_width] - 1 if x >= PARAMS[:battlefield_width]
       return [y, x]
+    end
+
+    def test_loading_game_setting
+      raise "not yet load game_setting!" if PARAMS == nil 
     end
   end
 end

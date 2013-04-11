@@ -3,6 +3,7 @@ require "curses"
 module BuildingDefence
   class Word
     def initialize(str, beg_y, beg_x, speed = 2)
+      test_loading_game_setting
       @content = str
       @speed = speed
       @beg_x, @beg_y = beg_x, beg_y
@@ -174,6 +175,9 @@ module BuildingDefence
       return x > y ? x : y
     end
 
+    def test_loading_game_setting
+      raise "not yet load game_setting!" if PARAMS == nil 
+    end
 
   end
 end
