@@ -4,6 +4,7 @@ require "benchmark"
 
 require "game_setting"
 require "word"
+require "building"
 require "dictionary"
 require "brush"
 require "shared"
@@ -116,6 +117,12 @@ module BuildingDefence
       end
       win.refresh
       sleep 0.3
+    end
+
+    public
+    def test
+      Building.new.show
+      Curses.getch
     end
 
   end
