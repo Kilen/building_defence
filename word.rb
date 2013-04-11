@@ -1,11 +1,16 @@
+$:.unshift File.expand_path('../', __FILE__)
 require "curses"
 require "brush"
+require "shared"
 
 module BuildingDefence
   class Word
     include Brush
+    include Shared
+
     def initialize(str, beg_y, beg_x, speed = 2)
       test_loading_game_setting
+      init_window_for_drawing
       @content = str
       @speed = speed
       @beg_x, @beg_y = beg_x, beg_y
@@ -134,13 +139,6 @@ module BuildingDefence
 
     def last_letter?
       @cur_i == length - 1
-    end
-
-
-    def test_loading_game_setting
-      PARAMS == nil 
-    rescue NameError
-      raise "not yet load game_setting!" 
     end
 
   end

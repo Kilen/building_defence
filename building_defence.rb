@@ -6,13 +6,18 @@ require "game_setting"
 require "word"
 require "dictionary"
 require "brush"
+require "shared"
 
 module BuildingDefence
   class GameControll
+    include Shared
+
     def initialize
-      init_window
+      test_loading_game_setting
+      init_window_for_drawing
       init_dictionary
 
+      srand
       @words_on_screen = []
 
       #some game setting should be initialized here
@@ -30,20 +35,6 @@ module BuildingDefence
     end
 
     private
-
-    def init_window
-      Curses.init_screen
-      Curses.start_color
-      Curses.noecho
-      #Curses.cbreak
-      srand
-
-      Curses.use_default_colors
-      Curses.init_pair(COLORS[:letter_typed], Curses::COLOR_BLUE, -1)
-      Curses.init_pair(COLORS[:error], Curses::COLOR_RED, -1)
-      Curses.init_pair(COLORS[:info], Curses::COLOR_WHITE, -1)
-      Curses.init_pair(COLORS[:success], Curses::COLOR_GREEN, -1)
-    end
 
     def init_dictionary
       @dictionary = Dictionary.new
