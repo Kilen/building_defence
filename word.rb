@@ -1,7 +1,9 @@
 require "curses"
+require "brush"
 
 module BuildingDefence
   class Word
+    include Brush
     def initialize(str, beg_y, beg_x, speed = 2)
       test_loading_game_setting
       @content = str
@@ -66,8 +68,8 @@ module BuildingDefence
     end
 
     def explode
-      draw_word explosion_head, @cur_y - 1, @cur_x
-      draw_word explosion_core, @cur_y, @cur_x 
+      draw_something explosion_head, @cur_y - 1, @cur_x
+      draw_something explosion_core, @cur_y, @cur_x 
     end
 
     def explosion_head
@@ -80,12 +82,12 @@ module BuildingDefence
     end
 
     def clear_explosion
-      draw_word space(length), @cur_y - 1, @cur_x
+      draw_something space(length), @cur_y - 1, @cur_x
       clear_word
     end
 
     def clear_word
-      draw_word space(length), @cur_y, @cur_x
+      draw_something space(length), @cur_y, @cur_x
     end
 
     def space len
@@ -97,55 +99,22 @@ module BuildingDefence
       return if collided?
       if typing?
         Curses.attron(Curses.color_pair(COLORS[:letter_typed])) do
-          draw_word @content[0...@cur_i], @cur_y, @cur_x
+          draw_something @content[0...@cur_i], @cur_y, @cur_x
         end
-        draw_word @content[@cur_i...length], @cur_y, @cur_x + @cur_i
+        draw_something @content[@cur_i...length], @cur_y, @cur_x + @cur_i
       else
-        draw_word @content, @cur_y, @cur_x
+        draw_something @content, @cur_y, @cur_x
       end
     end
 
     def draw_word_at_cur_line
       return if collided?
       Curses.attron(Curses.color_pair(COLORS[:letter_typed])) do
-        draw_word @content[0...@cur_i], @cur_y, @cur_x
+        draw_something @content[0...@cur_i], @cur_y, @cur_x
       end
-      draw_word @content[@cur_i...length], @cur_y, @cur_x + @cur_i
+      draw_something @content[@cur_i...length], @cur_y, @cur_x + @cur_i
     end
 
-    public
-    def draw_word(str, y, x)
-      str = return_part_that_within_border str, y, x
-      y, x = adjust_y_x y, x
-      Curses.setpos y, x
-      Curses.addstr str
-      Curses.refresh
-    end
-
-    def return_part_that_within_border(str, y, x)
-      if y < 0 || y >= PARAMS[:battlefield_height]
-        return ""
-      end
-
-      if x < 0
-        beg = -x
-        len = str.length - beg
-        len = min(len, PARAMS[:battlefield_width])
-      else
-        beg = 0
-        over = max(x + str.length - PARAMS[:battlefield_width], 0)
-        len = str.length - over
-      end
-      return str[beg, len]
-    end
-
-    def adjust_y_x(y, x)
-      y = 0 if y < 0
-      y = PARAMS[:battlefield_height] - 1 if y >= PARAMS[:battlefield_height]
-      x = 0 if x < 0
-      x = PARAMS[:battlefield_width] - 1 if x >= PARAMS[:battlefield_width]
-      return [y, x]
-    end
 
     def collided?
       @cur_y == Curses.lines || hit_building?
@@ -167,16 +136,11 @@ module BuildingDefence
       @cur_i == length - 1
     end
 
-    def min x, y
-      return x < y ? x : y
-    end
-
-    def max x, y
-      return x > y ? x : y
-    end
 
     def test_loading_game_setting
-      raise "not yet load game_setting!" if PARAMS == nil 
+      PARAMS == nil 
+    rescue NameError
+      raise "not yet load game_setting!" 
     end
 
   end

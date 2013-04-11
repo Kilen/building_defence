@@ -5,6 +5,7 @@ require "benchmark"
 require "game_setting"
 require "word"
 require "dictionary"
+require "brush"
 
 module BuildingDefence
   class GameControll
@@ -125,10 +126,12 @@ module BuildingDefence
       win.refresh
       sleep 0.3
     end
+
   end
 
   #------------------> program entry
   game = GameControll.new
   game.start
 end
+
 
