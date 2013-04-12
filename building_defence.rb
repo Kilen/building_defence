@@ -16,17 +16,17 @@ module BuildingDefence
     def initialize
       test_loading_game_setting
       init_window_for_drawing
+      init_parameters
       init_dictionary
+      init_building
 
       srand
       @words_on_screen = []
 
-      #some game setting should be initialized here
-      PARAMS[:battlefield_width] = Curses.cols - 20
-      PARAMS[:battlefield_height] = Curses.lines
     end
 
     def start
+      @building.show
       handle_input
       while !game_done?
         prepare_words
@@ -37,8 +37,18 @@ module BuildingDefence
 
     private
 
+    def init_parameters
+      #some game setting should be initialized here
+      PARAMS[:battlefield_width] = Curses.cols - 20
+      PARAMS[:battlefield_height] = Curses.lines
+    end
+
     def init_dictionary
       @dictionary = Dictionary.new
+    end
+
+    def init_building
+      @building = Building.new
     end
 
     def prepare_words
