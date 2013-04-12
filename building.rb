@@ -24,7 +24,21 @@ module BuildingDefence
     end
 
     def print
-      puts @building
+      @max_height.downto(1) do |i|
+        puts @building[i-1]
+      end
+    end
+
+    def coordinates_of_building
+      coordinates = []
+      @max_height.downto(1) do |y|
+        x = 0
+        @building[y-1].each_char do |ch|
+          coordinates << [x, PARAMS[:battlefield_height] - y] if ch == PARAMS[:building_unit]
+          x += 1
+        end
+      end
+      coordinates
     end
 
     private
@@ -39,7 +53,7 @@ module BuildingDefence
       str = ""
       PARAMS[:battlefield_width].times do
         if rand(10) >= 5
-          str += "#"
+          str += PARAMS[:building_unit]
         else
           str += " "
         end
