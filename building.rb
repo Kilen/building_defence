@@ -12,7 +12,7 @@ module BuildingDefence
       test_loading_game_setting
       init_window_for_drawing
       srand
-      @max_height = 3
+      @max_height = PARAMS[:building_height]
       @building = []
       generate_building
     end
@@ -21,6 +21,10 @@ module BuildingDefence
       @max_height.downto(1) do |i|
         draw_something @building[i-1], PARAMS[:battlefield_height] - i, 0
       end
+    end
+
+    def print
+      puts @building
     end
 
     private
