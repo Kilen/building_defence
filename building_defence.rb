@@ -49,6 +49,7 @@ module BuildingDefence
 
     def init_building
       @building = Building.new
+      Word.load_building @building.coordinates_of_building
     end
 
     def prepare_words
@@ -56,7 +57,7 @@ module BuildingDefence
       @words = []
       while x + @dictionary.max_len < PARAMS[:battlefield_width]
         str = @dictionary.random_word
-        @words << Word.new(str, y, x, 3)
+        @words << Word.new(str, y, x, PARAMS[:word_speed])
         x += str.length + PARAMS[:word_density]
       end 
     end
@@ -101,13 +102,14 @@ module BuildingDefence
         @words_on_screen << word
         Thread.new do 
           @words_on_screen.delete word.fall 
-          show_messages ["KIA:", word.content], COLORS[:success]
+          #show_messages ["KIA:", word.content], COLORS[:success]
+          show_messages ["building left:", Word.show_building.length.to_s]
         end
       end
     end
 
     def game_over?
-      false
+      Word.show_building.empty?
     end
 
     def victory?
@@ -131,8 +133,9 @@ module BuildingDefence
 
     public
     def test
-      Building.new.show
-      Curses.getch
+      @building.show
+      prepare_words
+      go_words!
     end
 
   end

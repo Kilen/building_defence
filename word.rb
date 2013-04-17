@@ -64,6 +64,15 @@ module BuildingDefence
       @kia
     end
 
+    def self.load_building(building)
+      @@building = building
+      #@@buiding = [[x1, y1], [x2, y2], [x3, y3] ...]
+    end
+
+    def self.show_building
+      @@building
+    end
+
     private
 
     def blast_effect
@@ -126,7 +135,45 @@ module BuildingDefence
     end
 
     def hit_building?
-      false
+      top_floor_of_building = @@building[0][1]
+      flag = false
+      if @cur_y >= top_floor_of_building
+        flag = check_collide
+      end
+      flag
+    end
+
+    def check_collide
+      collide_flag = false
+      word_x = word_x_coordinate_to_array
+      word_index, building_index = 0, find_right_floor
+      while word_index < self.length && building_index < @@building.length && @@building[building_index][1] == @cur_y
+        if word_x[word_index] > @@building[building_index][0]
+          building_index += 1
+        elsif word_x[word_index] == @@building[building_index][0]
+          collide_flag = true
+          @@building.delete_at building_index
+          word_index += 1
+          building_index += 1
+        else
+          word_index += 1
+        end
+      end
+      collide_flag
+    end
+
+    def word_x_coordinate_to_array
+      arr = []
+      self.length.times {|i| arr << @cur_x + i}
+      arr
+    end
+    
+    def find_right_floor
+      building_index = 0
+      while building_index < @@building.length && @@building[building_index][1] < @cur_y
+        building_index += 1
+      end
+      return building_index
     end
 
     def pause

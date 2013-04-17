@@ -1,7 +1,8 @@
 module BuildingDefence
   PARAMS = {
-    wave_interval: 10, #the bigger the easier
-    word_density: 5, #the bigger the easier
+    wave_interval: 5, #the bigger the easier
+    word_density: 2, #the bigger the easier
+    word_speed: 4, #the bigger the faster, the harder
 
     #building
     building_height: 3, 

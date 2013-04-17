@@ -51,7 +51,7 @@ module BuildingDefence
 
     def random_string
       str = ""
-      PARAMS[:battlefield_width].times do
+      (PARAMS[:battlefield_width] - 10).times do
         if rand(10) >= 5
           str += PARAMS[:building_unit]
         else
