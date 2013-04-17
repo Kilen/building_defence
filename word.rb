@@ -18,7 +18,8 @@ module BuildingDefence
       @cur_i = 0 #pointer to the first letter untyped
 
       @typing = false #indicate whether this unit was being typing
-      @kia = false #indicate whether this unit kill in action
+      @crash = false #indicate whether this unit crash group or building
+      @kill_by_you = false
     end
 
     def fall
@@ -28,7 +29,6 @@ module BuildingDefence
         clear_word
         draw_word_at_next_line
       end
-      @kia = true
       blast_effect
       self
     end
@@ -45,7 +45,7 @@ module BuildingDefence
 
       if @cur_i < length && char == @content[@cur_i]
         @typing = true
-        @kia = true if last_letter?
+        @kill_by_you = true if last_letter?
         @cur_i += 1
         draw_word_at_cur_line
         return true
@@ -61,7 +61,11 @@ module BuildingDefence
     end
 
     def kia?
-      @kia
+      @crash || @kill_by_you
+    end
+
+    def kill_by_you?
+      @kill_by_you
     end
 
     def self.load_building(building)
@@ -131,8 +135,8 @@ module BuildingDefence
 
 
     def collided?
-      @kia = true if @cur_y == Curses.lines || hit_building?
-      @kia
+      @crash = true if @cur_y == Curses.lines || hit_building?
+      @crash
     end
 
     def hit_building?
