@@ -22,6 +22,7 @@ module BuildingDefence
 
       srand
       @words_on_screen = []
+      @score = 0
 
     end
 
@@ -31,8 +32,11 @@ module BuildingDefence
       while !game_done?
         prepare_words
         go_words!
+        break if game_done?
         sleep PARAMS[:wave_interval]
       end
+      show_messages ["Game Over", "Your score: #{@score}"], COLORS[:info], (Curses.lines - 2) / 2, (Curses.cols - 20) / 2
+      Curses.getch
     end
 
     private
@@ -117,9 +121,9 @@ module BuildingDefence
     end
 
     #for debug
-    def show_messages msgs, color=COLORS[:info]
+    def show_messages msgs, color=COLORS[:info], top=0, left=Curses.cols-20
       raise "msgs must be array" if msgs.class != Array
-      win = Curses::Window.new msgs.length + 2 , 20, 0, Curses.cols - 20
+      win = Curses::Window.new msgs.length + 2 , 20, top, left
       win.box(?|, ?-)
       msgs.each_with_index do |msg, index|
         win.setpos(index + 1, 3)
