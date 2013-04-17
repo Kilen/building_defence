@@ -106,9 +106,22 @@ module BuildingDefence
         @words_on_screen << word
         Thread.new do 
           @words_on_screen.delete word.fall 
-          #show_messages ["KIA:", word.content], COLORS[:success]
-          show_messages ["building left:", Word.show_building.length.to_s]
+          if word.kill_by_you?
+            @score += calculate_score word
+            show_messages [word.content + " is kia", "score: #{calculate_score word}"], COLORS[:success]
+          end
         end
+      end
+    end
+
+    def calculate_score(word)
+      word_len = word.length
+      if word_len <= 5
+        return word_len * 100
+      elsif word_len <= 10
+        return word_len * 200
+      else
+        return word_len * 300
       end
     end
 
