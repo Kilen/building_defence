@@ -131,7 +131,8 @@ module BuildingDefence
 
 
     def collided?
-      @cur_y == Curses.lines || hit_building?
+      @kia = true if @cur_y == Curses.lines || hit_building?
+      @kia
     end
 
     def hit_building?
