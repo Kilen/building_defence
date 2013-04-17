@@ -37,6 +37,10 @@ module BuildingDefence
       @content
     end
 
+    def speed
+      @speed
+    end
+
     def length
       @content.length
     end

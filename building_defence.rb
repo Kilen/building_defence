@@ -61,7 +61,7 @@ module BuildingDefence
       @words = []
       while x + @dictionary.max_len < PARAMS[:battlefield_width]
         str = @dictionary.random_word
-        @words << Word.new(str, y, x, PARAMS[:word_speed])
+        @words << Word.new(str, y, x, rand(10) + 1)
         x += str.length + PARAMS[:word_density]
       end 
     end
@@ -112,13 +112,12 @@ module BuildingDefence
     end
 
     def calculate_score(word)
-      word_len = word.length
-      if word_len <= 5
-        return word_len * 100
-      elsif word_len <= 10
-        return word_len * 200
+      if word.length <= 5
+        return word.length * 10 * word.speed
+      elsif word.length <= 10
+        return word.length * 20 * word.speed
       else
-        return word_len * 300
+        return word.length * 30 * word.speed
       end
     end
 
