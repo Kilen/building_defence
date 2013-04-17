@@ -23,7 +23,6 @@ module BuildingDefence
       srand
       @words_on_screen = []
       @score = 0
-
     end
 
     def start
