@@ -4,7 +4,9 @@ module BuildingDefence
       @words = []
       @max_len = 0
       @number = 20
-      load_words
+      @dic = IO.readlines "dictionary/brit-a-z"
+      srand
+      reload_words
     end
 
     def max_len
@@ -20,12 +22,10 @@ module BuildingDefence
       @words[rand(@number)]
     end
 
-    private
-
-    def load_words
-      dic = IO.readlines "dictionary/brit-a-z"
+    def reload_words
+      @words.clear
       @number.times do
-        word  = dic[rand(dic.length)].chop
+        word  = @dic[rand(@dic.length)].chomp.chomp #for words like "abc\n\r"
         @max_len = word.length if word.length > @max_len
         @words << word
       end

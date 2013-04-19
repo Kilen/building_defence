@@ -58,6 +58,7 @@ module BuildingDefence
     def prepare_words
       x, y = 0, 0
       @words = []
+      @dictionary.reload_words
       while x + @dictionary.max_len < PARAMS[:battlefield_width]
         str = @dictionary.random_word
         @words << Word.new(str, y, x, rand(10) + 1)
@@ -104,7 +105,7 @@ module BuildingDefence
           @words_on_screen.delete word.fall 
           if word.kill_by_you?
             @score += calculate_score word
-            show_messages [word.content + " is kia", "score: #{calculate_score word}"], COLORS[:success]
+            show_messages ["current score: #{@score}", word.content + " is kia", "score: #{calculate_score word}"], COLORS[:success]
           end
         end
       end
@@ -129,9 +130,9 @@ module BuildingDefence
     end
 
     #for debug
-    def show_messages msgs, color=COLORS[:info], top=0, left=Curses.cols-20
+    def show_messages msgs, color=COLORS[:info], top=0, left=Curses.cols-30
       raise "msgs must be array" if msgs.class != Array
-      win = Curses::Window.new msgs.length + 2 , 20, top, left
+      win = Curses::Window.new msgs.length + 2 , 30, top, left
       win.box(?|, ?-)
       msgs.each_with_index do |msg, index|
         win.setpos(index + 1, 3)
