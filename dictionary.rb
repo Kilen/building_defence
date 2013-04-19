@@ -4,7 +4,7 @@ module BuildingDefence
       @words = []
       @max_len = 0
       @number = 20
-      @dic = IO.readlines "dictionary/brit-a-z"
+      @dic = IO.readlines File.expand_path "../dictionary/brit-a-z", __FILE__
       srand
       reload_words
     end
